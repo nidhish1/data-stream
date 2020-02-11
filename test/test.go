@@ -4,6 +4,6 @@ import  (
 	"fmt"
 )
 
-func foo () {
+func Foo () {
 	fmt.Println("sdf")
 }
