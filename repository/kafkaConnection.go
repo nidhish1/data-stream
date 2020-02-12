@@ -2,36 +2,31 @@ package repository
 
 import (
 	"fmt"
-	"strings"
+	//"strings"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 
-	"github.com/spf13/viper"
+	//"github.com/spf13/viper"
 )
 
-func receiveFromKafka() {
+func ReceiveFromKafka() {
 
-	fmt.Println("Start receiving from Kafka")
 	c, err := kafka.NewConsumer(&kafka.ConfigMap{
-		"bootstrap.servers": viper.GetString(`kafka.server`),
-		"group.id":          viper.GetString(`kafka.groupId`),
+		"bootstrap.servers": "kafka",
+		"group.id": "consumer1",
 		"auto.offset.reset": "earliest",
 	})
 
 	if err != nil {
 		panic(err)
 	}
-
-
-	c.SubscribeTopics(strings.Split(viper.GetString(`kafka.server`), ","), nil)
+	c.SubscribeTopics([]string{"server1.dbo.Lynk_DriverAvailable_AfterOffline"}, nil)
 
 	for {
 		msg, err := c.ReadMessage(-1)
 
 		if err == nil {
 			fmt.Printf("Received from Kafka %s: %s\n", msg.TopicPartition, string(msg.Value))
-			job := string(msg.Value)
-			saveJobToMongo(job)
 		} else {
 			fmt.Printf("Consumer error: %v (%v)\n", err, msg)
 			break
